@@ -1,0 +1,9 @@
+--Plancheck Time by Planner
+SELECT
+	g3s.GA_FNAME||' '||g3s.GA_LNAME
+FROM G3STAFFS g3s
+WHERE
+	1=1
+	AND g3s.SERV_PROV_CODE = 'SANTACLARITA'
+	AND g3s.REC_STATUS = 'A'
+	AND g3s.GA_DIVISION_CODE = ''

@@ -1,0 +1,373 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "SELECT DISTINCT\n\tr3s.APPLICATION_STATUS\nFROM R3STATYP r3s\nINNER JOIN R3APPTYP r3a ON\n\tr3s.SERV_PROV_CODE = r3a.SERV_PROV_CODE\n\tAND r3s.REC_STATUS = r3a.REC_STATUS\n\tAND r3s.R3_PROCESS_CODE = r3a.R1_PROCESS_CODE\nWHERE\n\t1=1\n\tAND r3s.SERV_PROV_CODE = 'SANTACLARITA'\n\tAND r3s.REC_STATUS = 'A'\n\tAND r3a.R1_PER_GROUP = 'Planning'\n\tAND NOT NULLIF(r3s.APPLICATION_STATUS,'') IS NULL\n\n--------\n\nSELECT\n\t'Staff'\nFROM DUAL\nUNION\nSELECT\n\t'Planning Commission'\nFROM DUAL\nUNION\nSELECT\n\t'City Council'\nFROM DUAL\n\n--------\n\nSELECT\n\tr3a.R1_PER_SUB_TYPE\nFROM R3APPTYP r3a\nWHERE\n\t1=1\n\tAND r3a.SERV_PROV_CODE = 'SANTACLARITA'\n\tAND r3a.REC_STATUS = 'A'\n\tAND r3a.R1_PER_GROUP = 'Planning'\n\tAND r3a.R1_PER_TYPE = 'Master Case'\n\tAND NOT r3a.R1_PER_SUB_TYPE = 'Master Case'\n\tAND r3a.R1_PER_CATEGORY = 'NA'",
+			"file": "planningParams.sql",
+			"file_size": 386,
+			"file_write_time": 131206089208252448,
+			"settings":
+			{
+				"buffer_size": 779,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "plannerWorkload.sql",
+			"settings":
+			{
+				"buffer_size": 6354,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "projectsByDate.sql",
+			"settings":
+			{
+				"buffer_size": 7089,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "SELECT\n\tb.B1_APP_TYPE_ALIAS recType\n\t,b.B1_ALT_ID recordNbr\n\t,b3.B1_ALT_ID parentRecNbr\n\t,b.B1_APPL_STATUS_DATE statDate\n\t,b.B1_APPL_STATUS applStat\n\t,g3s.GA_FNAME||' '||g3s.GA_LNAME asgnStaf\n\t,contct.contName applNam\n\t,b.B1_SPECIAL_TEXT projectNam\n\t,NVL(TO_CHAR(b3aV.B1_HSE_NBR_START),'')\n\t||NVL(NULLIF(' '||TRIM(b3aV.B1_STR_DIR),' '),'')\n\t||NVL(NULLIF(' '||TRIM(b3aV.B1_STR_NAME),' '),'')\n\t||NVL(NULLIF(' '||TRIM(b3aV.B1_STR_SUFFIX),' '),'')\n\t||NVL(NULLIF(' '||TRIM(b3aV.B1_UNIT_TYPE),' '),'')\n\t||NVL(NULLIF(' '||TRIM(b3aV.B1_UNIT_START),' '),'') addr\n\t,b3pV.B1_PARCEL_NBR parcelNbr\n\t,(\n\t\tSELECT\n\t\t\tLISTAGG(b2.B1_ALT_ID,', ') WITHIN GROUP (ORDER BY b2.B1_ALT_ID)\n\t\tFROM B1PERMIT b2\n\t\tINNER JOIN XAPP2REF xa ON\n\t\t\txa.SERV_PROV_CODE = b2.SERV_PROV_CODE\n\t\t\tAND xa.B1_PER_ID1 = b2.B1_PER_ID1\n\t\t\tAND xa.B1_PER_ID2 = b2.B1_PER_ID2\n\t\t\tAND xa.B1_PER_ID3 = b2.B1_PER_ID3\n\t\t\tAND xa.REC_STATUS = b2.REC_STATUS\n\t\tWHERE\n\t\t\t2=2\n\t\t\tAND b3.SERV_PROV_CODE = xa.SERV_PROV_CODE\n\t\t\tAND b3.B1_PER_ID1 = xa.B1_MASTER_ID1\n\t\t\tAND b3.B1_PER_ID2 = xa.B1_MASTER_ID2\n\t\t\tAND b3.B1_PER_ID3 = xa.B1_MASTER_ID3\n\t\t\tAND b3.REC_STATUS = xa.REC_STATUS\n\t\t\tAND b2.B1_PER_GROUP = 'Planning'\n\t\t\tAND b2.B1_PER_TYPE = 'Master Case'\n\t\t\tAND NOT b2.B1_PER_SUB_TYPE = 'Master Case'\n\t\t\tAND b2.B1_PER_CATEGORY = 'NA'\n\t\t\tAND NOT b2.B1_ALT_ID = b.B1_ALT_ID\n\t\t) childRecs\nFROM B1PERMIT b\nLEFT OUTER JOIN BPERMIT_DETAIL bpd ON\n\tb.SERV_PROV_CODE = bpd.SERV_PROV_CODE\n\tAND b.B1_PER_ID1 = bpd.B1_PER_ID1\n\tAND b.B1_PER_ID2 = bpd.B1_PER_ID2\n\tAND b.B1_PER_ID3 = bpd.B1_PER_ID3\n\tAND b.REC_STATUS = bpd.REC_STATUS\n\tLEFT OUTER JOIN G3STAFFS g3s ON\n\t\tbpd.SERV_PROV_CODE = g3s.SERV_PROV_CODE\n\t\tAND bpd.REC_STATUS = g3s.REC_STATUS\n\t\tAND bpd.B1_ASGN_STAFF = g3s.GA_USER_ID\nLEFT OUTER JOIN XAPP2REF xa2 ON\n\tb.SERV_PROV_CODE = xa2.SERV_PROV_CODE\n\tAND b.B1_PER_ID1 = xa2.B1_PER_ID1\n\tAND b.B1_PER_ID2 = xa2.B1_PER_ID2\n\tAND b.B1_PER_ID3 = xa2.B1_PER_ID3\n\tAND b.REC_STATUS = xa2.REC_STATUS\n\tLEFT OUTER JOIN B1PERMIT b3 ON\n\t\txa2.SERV_PROV_CODE = b3.SERV_PROV_CODE\n\t\tAND xa2.B1_MASTER_ID1 = b3.B1_PER_ID1\n\t\tAND xa2.B1_MASTER_ID2 = b3.B1_PER_ID2\n\t\tAND xa2.B1_MASTER_ID3 = b3.B1_PER_ID3\n\t\tAND xa2.REC_STATUS = b3.REC_STATUS\n\t\tAND b3.B1_PER_GROUP = 'Planning'\n\t\tAND b3.B1_PER_TYPE = 'Master Case'\n\t\tAND b3.B1_PER_SUB_TYPE = 'Master Case'\n\t\tAND b3.B1_PER_CATEGORY = 'NA'\nLEFT OUTER JOIN(\n\tSELECT\n\t\tb3c.SERV_PROV_CODE\n\t\t,b3c.B1_PER_ID1\n\t\t,b3c.B1_PER_ID2\n\t\t,b3c.B1_PER_ID3\n\t\t,b3c.B1_BUSINESS_NAME contBus\n\t\t,COALESCE(b3c.B1_FULL_NAME,b3c.B1_FNAME||' '||b3c.B1_LNAME) contName\n\t\t,b3c.B1_ADDRESS1 contAddr1\n\t\t,CASE WHEN NOT b3c.B1_ADDRESS2 IS NULL THEN b3c.B1_ADDRESS2\n\t\t\tELSE b3c.B1_CITY||', '||b3c.B1_STATE||' '||b3c.B1_ZIP\n\t\t\t\tEND AS contAddr2\n\t\t,CASE WHEN b3c.B1_ADDRESS2 IS NULL THEN NULL\n\t\t\tWHEN NOT b3c.B1_ADDRESS2 IS NULL AND NOT b3c.B1_ADDRESS3 IS NULL\n\t\t\t\tTHEN b3c.B1_ADDRESS3\n\t\t\tWHEN NOT b3c.B1_ADDRESS2 IS NULL AND b3c.B1_ADDRESS3 IS NULL\n\t\t\t\tTHEN b3c.B1_CITY||', '||b3c.B1_STATE||' '||b3c.B1_ZIP\n\t\t\tWHEN b3c.B1_ADDRESS2 IS NULL AND b3c.B1_ADDRESS3 IS NULL THEN NULL\n\t\t\t\tEND AS contAddr3\t\n\t\t,CASE WHEN NOT b3c.B1_ADDRESS3 IS NULL\n\t\t\tTHEN b3c.B1_CITY||', '||b3c.B1_STATE||' '||b3c.B1_ZIP\n\t\t\t\tELSE NULL END AS contAddr4\n\t\t,b3c.B1_PHONE1 contHmPhn\n\t\t,b3c.B1_PHONE2 contMobPhn\n\t\t,b3c.B1_PHONE3 contBusPhn\n\t\t,b3c.B1_FAX contFax\n\t\t,b3c.B1_EMAIL contEmail\n\tFROM B3CONTACT b3c\n\tWHERE\n\t\t1=1\n\t\tAND b3c.SERV_PROV_CODE = 'SANTACLARITA'\n\t\tAND b3c.REC_STATUS = 'A'\n\t\tAND b3c.B1_CONTACT_TYPE = 'Applicant' --SPECIFY CONTACT TYPE\n\t\tAND b3c.B1_CONTACT_NBR = (\n\t\t\tSELECT\n\t\t\t\tMIN(b3cS.B1_CONTACT_NBR)\n\t\t\tFROM B3CONTACT b3cS\n\t\t\tWHERE\n\t\t\t\t2=2\n\t\t\t\tAND b3cS.SERV_PROV_CODE = b3c.SERV_PROV_CODE\n\t\t\t\tAND b3cS.B1_PER_ID1 = b3c.B1_PER_ID1\n\t\t\t\tAND b3cS.B1_PER_ID2 = b3c.B1_PER_ID2\n\t\t\t\tAND b3cS.B1_PER_ID3 = b3c.B1_PER_ID3\n\t\t\t\tAND b3cS.REC_STATUS = b3c.REC_STATUS\n\t\t\t\tAND b3cS.B1_CONTACT_TYPE = 'Applicant'\n\t\t\t\tAND COALESCE(b3cS.B1_FLAG,'N') = (\n\t\t\t\t\tSELECT\n\t\t\t\t\t\tMAX(COALESCE(b3cS2.B1_FLAG,'N'))\n\t\t\t\t\tFROM B3CONTACT b3cS2\n\t\t\t\t\tWHERE\n\t\t\t\t\t\t3=3\n\t\t\t\t\t\tAND b3cS2.SERV_PROV_CODE = b3cS.SERV_PROV_CODE\n\t\t\t\t\t\tAND b3cS2.B1_PER_ID1 = b3cS.B1_PER_ID1\n\t\t\t\t\t\tAND b3cS2.B1_PER_ID2 = b3cS.B1_PER_ID2\n\t\t\t\t\t\tAND b3cS2.B1_PER_ID3 = b3cS.B1_PER_ID3\n\t\t\t\t\t\tAND b3cS2.REC_STATUS = b3cS.REC_STATUS\n\t\t\t\t\t\tAND b3cS2.B1_CONTACT_TYPE = 'Applicant'\n\t\t\t\t\t)\n\t\t\t\t)\n\t) contct ON\n\tb.SERV_PROV_CODE = contct.SERV_PROV_CODE\n\tAND b.B1_PER_ID1 = contct.B1_PER_ID1\n\tAND b.B1_PER_ID2 = contct.B1_PER_ID2\n\tAND b.B1_PER_ID3 = contct.B1_PER_ID3\nLEFT OUTER JOIN (\n\tSELECT\n\t\tb3p.SERV_PROV_CODE\n\t\t,b3p.B1_PER_ID1\n\t\t,b3p.B1_PER_ID2\n\t\t,b3p.B1_PER_ID3\n\t\t,b3p.B1_LEGAL_DESC\n\t\t,b3p.B1_PARCEL_NBR\n\tFROM B3PARCEL b3p\n\tWHERE\n\t\t2=2\n\t\tAND b3p.SERV_PROV_CODE = 'SANTACLARITA'\n\t\tAND b3p.REC_STATUS = 'A'\n\t\tAND b3p.B1_PARCEL_NBR = (\n\t\tSELECT\n\t\t\tMIN(b3pS.B1_PARCEL_NBR)\n\t\tFROM B3PARCEL b3pS\n\t\tWHERE\n\t\t\t3=3\n\t\t\tAND b3pS.SERV_PROV_CODE = b3p.SERV_PROV_CODE\n\t\t\tAND b3pS.B1_PER_ID1 = b3p.B1_PER_ID1\n\t\t\tAND b3pS.B1_PER_ID2 = b3p.B1_PER_ID2\n\t\t\tAND b3pS.B1_PER_ID3 = b3p.B1_PER_ID3\n\t\t\tAND b3pS.REC_STATUS = b3p.REC_STATUS\n\t\t\tAND COALESCE(b3pS.B1_PRIMARY_PAR_FLG,'N') = (\n\t\t\t\tSELECT\n\t\t\t\t\tMAX(COALESCE(b3pS2.B1_PRIMARY_PAR_FLG,'N'))\n\t\t\t\tFROM B3PARCEL b3pS2\n\t\t\t\tWHERE\n\t\t\t\t\t4=4\n\t\t\t\t\tAND b3pS2.SERV_PROV_CODE = b3pS.SERV_PROV_CODE\n\t\t\t\t\tAND b3pS2.B1_PER_ID1 = b3pS.B1_PER_ID1\n\t\t\t\t\tAND b3pS2.B1_PER_ID2 = b3pS.B1_PER_ID2\n\t\t\t\t\tAND b3pS2.B1_PER_ID3 = b3pS.B1_PER_ID3\n\t\t\t\t\tAND b3pS2.REC_STATUS = b3pS.REC_STATUS\n\t\t\t\t)\n\t\t\t)\n\t\t) b3pV ON\n\tb.SERV_PROV_CODE = b3pV.SERV_PROV_CODE\n\tAND b.B1_PER_ID1 = b3pV.B1_PER_ID1\n\tAND b.B1_PER_ID2 = b3pV.B1_PER_ID2\n\tAND b.B1_PER_ID3 = b3pV.B1_PER_ID3\t\t\nLEFT OUTER JOIN (\n\tSELECT\n\t\tb3a.SERV_PROV_CODE\n\t\t,b3a.B1_PER_ID1\n\t\t,b3a.B1_PER_ID2\n\t\t,b3a.B1_PER_ID3\n\t\t,b3a.B1_HSE_NBR_START\n\t\t,b3a.B1_STR_DIR\n\t\t,b3a.B1_STR_NAME\n\t\t,b3a.B1_STR_SUFFIX\n\t\t,b3a.B1_UNIT_START\n\t\t,b3a.B1_UNIT_TYPE\n\t\t,b3a.B1_SITUS_CITY\n\t\t,b3a.B1_SITUS_STATE\n\t\t,b3a.B1_SITUS_ZIP\n\tFROM B3ADDRES b3a\n\tWHERE\n\t\t2=2\n\t\tAND b3a.SERV_PROV_CODE = 'SANTACLARITA'\n\t\tAND b3a.REC_STATUS = 'A'\n\t\tAND b3a.B1_ADDRESS_NBR = (\n\t\t\tSELECT\n\t\t\t\tMIN(b3aS.B1_ADDRESS_NBR)\n\t\t\tFROM B3ADDRES b3aS\n\t\t\tWHERE\n\t\t\t\t3=3\n\t\t\t\tAND b3aS.SERV_PROV_CODE = b3a.SERV_PROV_CODE\n\t\t\t\tAND b3aS.B1_PER_ID1 = b3a.B1_PER_ID1\n\t\t\t\tAND b3aS.B1_PER_ID2 = b3a.B1_PER_ID2\n\t\t\t\tAND b3aS.B1_PER_ID3 = b3a.B1_PER_ID3\n\t\t\t\tAND b3aS.REC_STATUS = b3a.REC_STATUS\n\t\t\t\tAND COALESCE(b3aS.B1_PRIMARY_ADDR_FLG,'N') = (\n\t\t\t\t\tSELECT\n\t\t\t\t\t\tMAX(COALESCE(b3aS2.B1_PRIMARY_ADDR_FLG,'N'))\n\t\t\t\t\tFROM B3ADDRES b3aS2\n\t\t\t\t\tWHERE\n\t\t\t\t\t\t4=4\n\t\t\t\t\t\tAND b3aS2.SERV_PROV_CODE = b3aS.SERV_PROV_CODE\n\t\t\t\t\t\tAND b3aS2.B1_PER_ID1 = b3aS.B1_PER_ID1\n\t\t\t\t\t\tAND b3aS2.B1_PER_ID2 = b3aS.B1_PER_ID2\n\t\t\t\t\t\tAND b3aS2.B1_PER_ID3 = b3aS.B1_PER_ID3\n\t\t\t\t\t\tAND b3aS2.REC_STATUS = b3aS.REC_STATUS\n\t\t\t\t)\n\t\t\t)\n\t\t) b3aV ON\n\tb.SERV_PROV_CODE = b3aV.SERV_PROV_CODE\n\tAND b.B1_PER_ID1 = b3aV.B1_PER_ID1\n\tAND b.B1_PER_ID2 = b3aV.B1_PER_ID2\n\tAND b.B1_PER_ID3 = b3aV.B1_PER_ID3\nWHERE\n\t1=1\n\tAND b.SERV_PROV_CODE = 'SANTACLARITA'\n\tAND b.REC_STATUS = 'A'\n\tAND b.B1_PER_GROUP = 'Planning'\n\tAND b.B1_PER_TYPE = 'Master Case'\n\tAND b.B1_PER_SUB_TYPE = '{?entitlement}'\n\tAND b.B1_PER_CATEGORY = 'NA'\n\tAND (\n\t\t\tb.B1_APPL_STATUS_DATE >= {?startDate}\n\t\t\tAND b.B1_APPL_STATUS_DATE <= {?endDate}\n\t\t\t)\t\t",
+			"file": "projectsByType.sql",
+			"file_size": 7329,
+			"file_write_time": 131197326905499109,
+			"settings":
+			{
+				"buffer_size": 7097,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/wade/Google Drive/Lancaster/Reports/Dev Reports/SQL/Licensing/businessLicenseSingle.sql",
+			"settings":
+			{
+				"buffer_size": 8000,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/wade/Google Drive/Santa Clarita/Reports/Dev Reports/SQL/Planning/projectsByDate",
+		"/C/Users/wade/Google Drive/Santa Clarita/Reports/Dev Reports/SQL/Planning/Planning_Projects_by_Date_Range.sql",
+		"/C/Users/wade/Google Drive/Santa Clarita/Reports/Dev Reports/SQL/Planning/PLN_Projects_by_Type.sql",
+		"/C/Users/wade/Google Drive/Torrance_AMS/Conversions/WorkingViews/conv_PERMIT_COSTING_AMS.sql",
+		"/C/Users/wade/GoogleDrive/_CW Report Resources/SQL_Library/Oracle_Library.sql",
+		"/C/Users/wade/GoogleDrive/Perris/Reports/Dev Reports/SQL/sr_invoice_contact.sql",
+		"/C/Users/wade/GoogleDrive/Torrance_AMS/Reports/Dev Reports/SQL/parameters.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/busLic_Inquiry.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/businessLicenseBatch.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/businessLicenseSingle.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/busLic_Invoice.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/busLic_Delinquent.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/busLic_Renewal.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/sr_busLic_InvoiceFees.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/sr_busLicCondits.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/sr_busLicFees.sql",
+		"/C/Users/wade/GoogleDrive/Brevard County/Reports/devReports/SQL/buildingPermit_RecordDetail.sql",
+		"/C/Users/wade/GoogleDrive/Torrance_AMS/Reports/Dev Reports/SQL/brknWtrMain.sql",
+		"/C/Users/wade/GoogleDrive/Lancaster/Reports/Dev Reports/SQL/Licensing/businessLicense.sql",
+		"/C/Users/wade/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "planningParams.sql",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 779,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								779,
+								507
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SQL/SQL.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "plannerWorkload.sql",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6354,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1698,
+								1698
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SQL/SQL.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "projectsByDate.sql",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7089,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1485,
+								1324
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SQL/SQL.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "projectsByType.sql",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7097,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3150,
+								3150
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SQL/SQL.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2908.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/Users/wade/Google Drive/Lancaster/Reports/Dev Reports/SQL/Licensing/businessLicenseSingle.sql",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8000,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SQL/SQL.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2601.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "PlanningReportsSQL.sublime-project",
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
